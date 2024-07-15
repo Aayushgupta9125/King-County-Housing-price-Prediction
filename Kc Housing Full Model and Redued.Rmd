@@ -1,0 +1,73 @@
+---
+title: "housing"
+author: "aayush"
+date: "2024-07-15"
+output: html_document
+---
+
+```{r}
+housing <- read.csv("C:\\Users\\91931\\Downloads\\kc_house_data.csv")
+head(housing,10)
+```
+```{r}
+str(housing)
+```
+```{r}
+library(psych)
+library(car)
+library(DataExplorer)
+library(dplyr)
+library(ggplot2)
+library(rpart)
+library(rpart.plot)
+library(stats)
+library(lmtest)
+library(Metrics)
+library(MASS)
+library(glmnet)
+```
+
+```{r}
+plot_missing(housing)
+```
+
+```{r}
+#Data Partitioning
+set.seed(1234)
+housing_mixed<-housing[order(runif(21613)),]
+housing_training<-housing_mixed[1:15129,]
+housing_testing<-housing_mixed[15130:21613,]
+```
+
+```{r}
+housing_model<- lm(price ~ .,data = housing_training)
+```
+
+```{r}
+summary(housing_model)
+```
+```{r}
+#Selecting best  features 
+housing_step<-stepAIC(housing_model,direction="backward")
+```
+```{r}
+re_housing<- lm(price ~ id + bedrooms + bathrooms + sqft_living + sqft_lot + 
+    waterfront + view + condition + grade + sqft_above + yr_built + 
+    yr_renovated + zipcode + lat + long + sqft_living15 + sqft_lot15,data= housing_training)
+```
+
+```{r}
+summary(re_housing)
+```
+```{r}
+plot_correlation(housing)
+```
+```{r}
+install.packages("glmnet")
+install.packages("dplyr")
+```
+
+```{r}
+plot_missing(housing)
+```
+
